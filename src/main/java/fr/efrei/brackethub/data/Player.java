@@ -16,8 +16,6 @@ public class Player {
     private int age;
     @ManyToMany(mappedBy = "players")
     private List<Tournament> tournaments=new ArrayList<>();
-    @ManyToMany(mappedBy = "players")
-    private List<Tournament> previous_tournaments=new ArrayList<>();
 
     public Player(){
     }
