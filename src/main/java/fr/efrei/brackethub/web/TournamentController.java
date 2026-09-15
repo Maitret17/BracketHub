@@ -36,4 +36,12 @@ public class TournamentController {
     public void addTournament(@RequestBody Tournament tournament) {
         tournamentService.addTournament(tournament);
     }
+
+    @PutMapping("/{tournamentId}/players/{playerId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void addPlayer(
+            @PathVariable Long tournamentId,
+            @PathVariable Long playerId){
+        tournamentService.addPlayer(tournamentId, playerId);
+    }
 }
