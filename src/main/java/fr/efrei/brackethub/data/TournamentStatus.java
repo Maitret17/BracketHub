@@ -1,4 +1,7 @@
 package fr.efrei.brackethub.data;
 
-public class TournamentStatus {
+public enum TournamentStatus {
+    UPCOMING,
+    ONGOING,
+    FINISHED
 }
