@@ -1,25 +1,30 @@
 package fr.efrei.brackethub.data;
+import jakarta.persistence.*;
 
+import java.lang.reflect.GenericDeclaration;
 import java.util.ArrayList;
+import java.util.List;
 
+@Entity
 public class Player {
 
-
-    private final int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String first_name;
     private String last_name;
     private int age;
-    private ArrayList<Tournament> tournaments;
-    private ArrayList<Tournament> previous_tournaments;
+    @ManyToMany(mappedBy = "players")
+    private List<Tournament> tournaments=new ArrayList<>();
+    @ManyToMany(mappedBy = "players")
+    private List<Tournament> previous_tournaments=new ArrayList<>();
 
-    public Player(int id,String first_name,String last_name,int age) {
-        this.id = id;
+    public Player(){
+    }
+    public Player(String first_name,String last_name,int age) {
         this.first_name = first_name;
         this.last_name=last_name;
         this.age= age;
-    }
-    public int getId() {
-        return id;
     }
     public String getFirst_name() {
         return first_name;
