@@ -1,4 +1,7 @@
 package fr.efrei.brackethub.repository;
 
-public class PlayerRepository {
+import fr.efrei.brackethub.data.Player;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PlayerRepository extends JpaRepository<Player, Long> {
 }
