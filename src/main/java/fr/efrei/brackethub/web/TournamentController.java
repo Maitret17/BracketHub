@@ -6,6 +6,9 @@ import fr.efrei.brackethub.service.TournamentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.server.ResponseStatusException;
 
 import jakarta.validation.Valid;
 
@@ -69,5 +72,23 @@ public class TournamentController {
             @PathVariable Long playerId) {
 
         tournamentService.removePlayer(tournamentId, playerId);
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<String> handleResponseStatusException(
+            ResponseStatusException exception) {
+
+        return ResponseEntity
+                .status(exception.getStatusCode())
+                .body(exception.getReason());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleValidationException(
+            MethodArgumentNotValidException exception) {
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Invalid data");
     }
 }
