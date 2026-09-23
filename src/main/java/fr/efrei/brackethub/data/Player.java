@@ -1,9 +1,11 @@
 package fr.efrei.brackethub.data;
 import jakarta.persistence.*;
 
-import java.lang.reflect.GenericDeclaration;
 import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Player {
@@ -11,11 +13,14 @@ public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String first_name;
+    @NotBlank
     private String last_name;
+    @Min(0)
     private int age;
     @ManyToMany(mappedBy = "players")
-    private List<Tournament> tournaments=new ArrayList<>();
+    private List<Tournament> tournaments = new ArrayList<>();
 
     public Player(){
     }

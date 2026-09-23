@@ -2,9 +2,15 @@ package fr.efrei.brackethub.data;
 
 import jakarta.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 public class Tournament {
@@ -13,18 +19,24 @@ public class Tournament {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     private String name;
+    @NotNull
     private LocalDate startDate;
+    @NotNull
     private LocalDate endDate;
+    @Positive
     private int maxPlayers;
-
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @ManyToMany
     private List<Player> players = new ArrayList<>();
-
+    @NotNull
     @Enumerated(EnumType.STRING)
     private TournamentStatus status;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Discipline discipline;
 
-    // TODO Discipline enumerator
 
     public Tournament() {
     }
@@ -66,6 +78,10 @@ public class Tournament {
         return status;
     }
 
+    public Discipline getDiscipline() {
+        return discipline;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -82,11 +98,11 @@ public class Tournament {
         this.maxPlayers = maxPlayers;
     }
 
-    public void setPlayers(List<Player> players) { // Unsure to keep, we probably should just do a function to addPlayers
-        this.players = players;
-    }
-
     public void setStatus(TournamentStatus status) {
         this.status = status;
+    }
+
+    public void setDiscipline(Discipline discipline){
+        this.discipline = discipline;
     }
 }

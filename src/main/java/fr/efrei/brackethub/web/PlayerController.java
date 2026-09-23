@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -21,7 +23,7 @@ public class PlayerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addPlayer(@RequestBody Player player) {
+    public void addPlayer(@Valid @RequestBody Player player) {
         playerService.addPlayer(player);
     }
     @GetMapping("/{id}")
@@ -33,7 +35,7 @@ public class PlayerController {
     @ResponseStatus(HttpStatus.OK)
     public void updatePlayer(
             @PathVariable Long id,
-            @RequestBody Player player) {
+            @Valid @RequestBody Player player) {
         playerService.updatePlayer(id, player);
     }
 

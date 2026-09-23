@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -33,8 +35,23 @@ public class TournamentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addTournament(@RequestBody Tournament tournament) {
+    public void addTournament(@Valid @RequestBody Tournament tournament) {
         tournamentService.addTournament(tournament);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateTournament(
+            @PathVariable Long id,
+            @Valid @RequestBody Tournament tournament) {
+
+        tournamentService.updateTournament(id, tournament);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTournament(@PathVariable Long id) {
+        tournamentService.deleteTournament(id);
     }
 
     @PutMapping("/{tournamentId}/players/{playerId}")
@@ -43,5 +60,14 @@ public class TournamentController {
             @PathVariable Long tournamentId,
             @PathVariable Long playerId){
         tournamentService.addPlayer(tournamentId, playerId);
+    }
+
+    @DeleteMapping("/{tournamentId}/players/{playerId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removePlayer(
+            @PathVariable Long tournamentId,
+            @PathVariable Long playerId) {
+
+        tournamentService.removePlayer(tournamentId, playerId);
     }
 }
