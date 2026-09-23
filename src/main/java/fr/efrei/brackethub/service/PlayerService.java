@@ -6,12 +6,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import fr.efrei.brackethub.data.Tournament;
+import fr.efrei.brackethub.repository.TournamentRepository;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
 public class PlayerService {
     @Autowired
     private PlayerRepository playerRepository;
+    @Autowired
+    private TournamentRepository tournamentRepository;
     public PlayerService() {
 
     }
@@ -32,8 +38,17 @@ public class PlayerService {
         playerRepository.save(existingPlayer);
     }
 
+    @Transactional
     public void deletePlayer(Long id) {
         Player player = getPlayer(id);
+        for (Tournament tournament : tournamentRepository.findAll()) {
+            boolean removed = tournament.getPlayers()
+                    .removeIf(p -> p.getId().equals(id));
+            if (removed) {
+                tournamentRepository.save(tournament);
+            }
+        }
+
         playerRepository.delete(player);
     }
 
