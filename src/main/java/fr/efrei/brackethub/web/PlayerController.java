@@ -29,5 +29,17 @@ public class PlayerController {
     public Player getPlayer(@PathVariable Long id) {
         return playerService.getPlayer(id);
     }
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updatePlayer(
+            @PathVariable Long id,
+            @RequestBody Player player) {
+        playerService.updatePlayer(id, player);
+    }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePlayer(@PathVariable Long id) {
+        playerService.deletePlayer(id);
+    }
 }

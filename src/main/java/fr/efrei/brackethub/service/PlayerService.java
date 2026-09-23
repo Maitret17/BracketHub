@@ -21,6 +21,22 @@ public class PlayerService {
     public void addPlayer(Player player) {
         playerRepository.save(player);
     }
+
+    public void updatePlayer(Long id, Player player) {
+        Player existingPlayer = getPlayer(id);
+
+        existingPlayer.setFirst_name(player.getFirst_name());
+        existingPlayer.setLast_name(player.getLast_name());
+        existingPlayer.setAge(player.getAge());
+
+        playerRepository.save(existingPlayer);
+    }
+
+    public void deletePlayer(Long id) {
+        Player player = getPlayer(id);
+        playerRepository.delete(player);
+    }
+
     public Player getPlayer(Long id) {
         return playerRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "no player found"));
     }
