@@ -30,9 +30,9 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/tournaments/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/tournaments/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/tournaments/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/Stournaments/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/tournaments/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/tournaments/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/tournaments/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().permitAll()
                 )
