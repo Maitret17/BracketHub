@@ -1,0 +1,141 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    color: #222;
+}
+
+nav {
+    background: #222;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav strong {
+    font-size: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.welcome {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+}
+
+.welcome h1 {
+    margin-top: 0;
+}
+
+#adminPanel {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    display: none;
+}
+
+.admin-btn {
+    display: inline-block;
+    background: #2563eb;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.admin-btn:hover {
+    background: #1d4ed8;
+}
+
+.tournament {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+}
+
+.tournament h3 {
+    margin-top: 0;
+    font-size: 22px;
+}
+
+.tournament p {
+    margin: 8px 0;
+}
+
+.actions {
+    margin-top: 15px;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.join-btn {
+    background: #2563eb;
+    color: white;
+}
+
+.join-btn:hover {
+    background: #1d4ed8;
+}
+
+.leave-btn {
+    background: #dc2626;
+    color: white;
+}
+
+.leave-btn:hover {
+    background: #b91c1c;
+}
+
+button:disabled {
+    background: #999;
+    color: white;
+    cursor: not-allowed;
+}
+
+.not-logged {
+    color: #666;
+}
+
+.status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.message {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+}

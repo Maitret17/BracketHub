@@ -1,10 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BracketHub - Connexion</title>
+    <link rel="stylesheet" href="css/login.css">
+
 </head>
+
 <body>
-$END$
+<div class="login-box">
+
+    <img src="brackethublogo.png" style="display: block; height: 40px; width: auto; margin: 0 auto 20px;">
+
+    <p class="subtitle">Connexion à votre compte</p>
+
+    <form id="loginForm">
+
+        <input
+                type="text"
+                id="username"
+                placeholder="Nom d'utilisateur"
+                required
+        >
+
+        <input
+                type="password"
+                id="password"
+                placeholder="Mot de passe"
+                required
+        >
+
+        <button type="submit">
+            Se connecter
+        </button>
+
+    </form>
+
+    <p id="message"></p>
+
+    <div class="register">
+        Pas encore de compte ?
+        <a href="/register.html">Créer un compte</a>
+    </div>
+
+</div>
+<script src="js/login.js"></script>
 </body>
 </html>

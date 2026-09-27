@@ -19,15 +19,30 @@ public class Player {
     private String last_name;
     @Min(0)
     private int age;
+
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.PLAYER;
+
     @ManyToMany(mappedBy = "players")
     private List<Tournament> tournaments = new ArrayList<>();
 
+    @NotBlank
+    @Column(unique = true)
+    private String username;
+
+    @NotBlank
+    private String password;
+
     public Player(){
     }
-    public Player(String first_name,String last_name,int age) {
+
+    public Player(String first_name, String last_name, int age, String username, String password, Role role) {
         this.first_name = first_name;
-        this.last_name=last_name;
-        this.age= age;
+        this.last_name = last_name;
+        this.age = age;
+        this.username = username;
+        this.password = password;
+        this.role = role;
     }
 
     public Long getId(){
@@ -49,9 +64,14 @@ public class Player {
     public int getAge() {
         return age;
     }
-
     public void setAge(int age) {
         this.age = age;
     }
+    public String getUsername() {return username;}
+    public void setUsername(String username) {this.username = username;}
+    public String getPassword() {return password;}
+    public void setPassword(String password) {this.password = password;}
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role;}
 
 }

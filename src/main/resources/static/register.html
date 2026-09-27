@@ -5,74 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>BracketHub - Register</title>
+    <link rel="stylesheet" href="css/register.css">
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f2f2f2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .register-box {
-            background: white;
-            width: 350px;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            background: #333;
-            color: white;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #555;
-        }
-
-        #message {
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-    </style>
 </head>
 
 <body>
 
 <div class="register-box">
 
-    <h1>Create account</h1>
+    <img src="brackethublogo.png" style="display: block; height: 40px; width: auto; margin: 0 auto 20px;">
 
     <form id="registerForm">
 
@@ -127,62 +68,8 @@
 
 </div>
 
-<script>
 
-    document.getElementById("registerForm").addEventListener("submit", async function(event) {
-
-        event.preventDefault();
-
-        const player = {
-            first_name: document.getElementById("firstName").value,
-            last_name: document.getElementById("lastName").value,
-            age: parseInt(document.getElementById("age").value),
-            username: document.getElementById("username").value,
-            password: document.getElementById("password").value
-        };
-
-        try {
-
-            const response = await fetch("/api/auth/register", {
-
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify(player)
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-
-                document.getElementById("message").textContent =
-                    "Account created! Redirecting to login...";
-
-                setTimeout(() => {
-                    window.location.href = "/login.html";
-                }, 1000);
-
-            } else {
-
-                document.getElementById("message").textContent =
-                    data.message || "Registration failed.";
-
-            }
-
-        } catch (error) {
-
-            document.getElementById("message").textContent =
-                "Unable to connect to the server.";
-
-            console.error(error);
-        }
-
-    });
-
-</script>
+<script src="js/register.js"></script>
 
 </body>
 </html>
