@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BracketHub - Admin</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f4f4;
+        }
+
+        nav {
+            background: #222;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        form {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        input, select, button {
+            padding: 10px;
+            font-size: 15px;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .create-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .edit-btn {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+            color: white;
+        }
+
+        .cancel-btn {
+            background: #777;
+            color: white;
+        }
+
+        .tournament {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .tournament h3 {
+            margin-top: 0;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        #message {
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <strong>BracketHub Admin</strong>
+
+    <div>
+        <span id="username"></span>
+        <a href="/index.html">Home</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <h1>Tournament Management</h1>
+
+    <p id="message"></p>
+
+    <h2 id="formTitle">Create Tournament</h2>
+
+    <form id="tournamentForm">
+
+        <input
+                type="text"
+                id="name"
+                placeholder="Tournament name"
+                required
+        >
+
+        <label>
+            Start date:
+            <input
+                    type="date"
+                    id="startDate"
+                    required
+            >
+        </label>
+
+        <label>
+            End date:
+            <input
+                    type="date"
+                    id="endDate"
+                    required
+            >
+        </label>
+
+        <input
+                type="number"
+                id="maxPlayers"
+                placeholder="Maximum players"
+                min="1"
+                required
+        >
+
+        <label>
+            Status:
+            <select id="status" required></select>
+        </label>
+
+        <label>
+            Discipline:
+            <select id="discipline" required></select>
+        </label>
+
+        <div>
+            <button type="submit" class="create-btn" id="submitButton">
+                Create Tournament
+            </button>
+
+            <button
+                    type="button"
+                    class="cancel-btn"
+                    id="cancelButton"
+                    onclick="cancelEdit()"
+                    style="display:none;"
+            >
+                Cancel
+            </button>
+        </div>
+
+    </form>
+
+    <h2>Existing Tournaments</h2>
+
+    <div id="tournaments"></div>
+
+</div>
+
+<script>
+
+    const role = sessionStorage.getItem("role");
+    const username = sessionStorage.getItem("username");
+
+    // Only admins can access this page
+    if (role !== "ADMIN") {
+        alert("You are not authorized to access this page.");
+        window.location.href = "/index.html";
+    }
+
+    document.getElementById("username").textContent =
+        username || "Admin";
+
+    let editingId = null;
+
+    /*
+     * Change these values if your TournamentStatus
+     * or Discipline enums contain different values.
+     */
+    const statuses = [
+        "UPCOMING",
+        "ONGOING",
+        "FINISHED",
+        "CANCELLED"
+    ];
+
+    const disciplines = [
+        "BRIDGE",
+        "OTHER"
+    ];
+
+    function fillSelect(id, values) {
+
+        const select = document.getElementById(id);
+
+        select.innerHTML = "";
+
+        values.forEach(value => {
+
+            const option = document.createElement("option");
+
+            option.value = value;
+            option.textContent = value;
+
+            select.appendChild(option);
+        });
+    }
+
+    fillSelect("status", statuses);
+    fillSelect("discipline", disciplines);
+
+
+    async function loadTournaments() {
+
+        const response = await fetch("/api/tournaments");
+
+        if (!response.ok) {
+            showMessage("Unable to load tournaments.");
+            return;
+        }
+
+        const tournaments = await response.json();
+
+        const container =
+            document.getElementById("tournaments");
+
+        container.innerHTML = "";
+
+        if (tournaments.length === 0) {
+
+            container.innerHTML =
+                "<p>No tournaments available.</p>";
+
+            return;
+        }
+
+        tournaments.forEach(tournament => {
+
+            const div = document.createElement("div");
+
+            div.className = "tournament";
+
+            div.innerHTML = `
+                <h3>${escapeHtml(tournament.name)}</h3>
+
+                <p>
+                    <strong>Dates:</strong>
+                    ${tournament.startDate}
+                    → ${tournament.endDate}
+                </p>
+
+                <p>
+                    <strong>Maximum players:</strong>
+                    ${tournament.maxPlayers}
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+                    ${tournament.status}
+                </p>
+
+                <p>
+                    <strong>Discipline:</strong>
+                    ${tournament.discipline}
+                </p>
+
+                <p>
+                    <strong>Players registered:</strong>
+                    ${tournament.players
+                ? tournament.players.length
+                : 0}
+                </p>
+
+                <div class="actions">
+
+                    <button
+                        class="edit-btn"
+                        onclick="editTournament(${tournament.id})"
+                    >
+                        Edit
+                    </button>
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteTournament(${tournament.id})"
+                    >
+                        Delete
+                    </button>
+
+                </div>
+            `;
+
+            container.appendChild(div);
+        });
+    }
+
+
+    document
+        .getElementById("tournamentForm")
+        .addEventListener("submit", async function(event) {
+
+            event.preventDefault();
+
+            const tournament = {
+
+                name: document.getElementById("name").value,
+
+                startDate:
+                document.getElementById("startDate").value,
+
+                endDate:
+                document.getElementById("endDate").value,
+
+                maxPlayers:
+                    Number(document.getElementById("maxPlayers").value),
+
+                status:
+                document.getElementById("status").value,
+
+                discipline:
+                document.getElementById("discipline").value
+            };
+
+
+            let response;
+
+            if (editingId === null) {
+
+                response = await fetch("/api/tournaments", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(tournament)
+                });
+
+            } else {
+
+                response = await fetch(
+                    `/api/tournaments/${editingId}`,
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify(tournament)
+                    }
+                );
+            }
+
+
+            if (!response.ok) {
+
+                showMessage(
+                    "Error while saving tournament."
+                );
+
+                return;
+            }
+
+
+            showMessage(
+                editingId === null
+                    ? "Tournament created."
+                    : "Tournament updated."
+            );
+
+            cancelEdit();
+
+            loadTournaments();
+        });
+
+
+    async function editTournament(id) {
+
+        const response =
+            await fetch(`/api/tournaments/${id}`);
+
+        if (!response.ok) {
+
+            showMessage("Tournament not found.");
+
+            return;
+        }
+
+        const tournament = await response.json();
+
+        editingId = id;
+
+        document.getElementById("name").value =
+            tournament.name;
+
+        document.getElementById("startDate").value =
+            tournament.startDate;
+
+        document.getElementById("endDate").value =
+            tournament.endDate;
+
+        document.getElementById("maxPlayers").value =
+            tournament.maxPlayers;
+
+        document.getElementById("status").value =
+            tournament.status;
+
+        document.getElementById("discipline").value =
+            tournament.discipline;
+
+        document.getElementById("formTitle").textContent =
+            "Edit Tournament";
+
+        document.getElementById("submitButton").textContent =
+            "Save Changes";
+
+        document.getElementById("cancelButton").style.display =
+            "inline-block";
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+
+    function cancelEdit() {
+
+        editingId = null;
+
+        document.getElementById("tournamentForm").reset();
+
+        document.getElementById("formTitle").textContent =
+            "Create Tournament";
+
+        document.getElementById("submitButton").textContent =
+            "Create Tournament";
+
+        document.getElementById("cancelButton").style.display =
+            "none";
+    }
+
+
+    async function deleteTournament(id) {
+
+        const confirmed =
+            confirm(
+                "Are you sure you want to delete this tournament?"
+            );
+
+        if (!confirmed) {
+            return;
+        }
+
+        const response =
+            await fetch(`/api/tournaments/${id}`, {
+                method: "DELETE"
+            });
+
+        if (!response.ok) {
+
+            showMessage(
+                "Unable to delete tournament."
+            );
+
+            return;
+        }
+
+        showMessage("Tournament deleted.");
+
+        loadTournaments();
+    }
+
+
+    function showMessage(message) {
+
+        document.getElementById("message")
+            .textContent = message;
+    }
+
+
+    function escapeHtml(value) {
+
+        const div = document.createElement("div");
+
+        div.textContent = value;
+
+        return div.innerHTML;
+    }
+
+
+    function logout() {
+
+        sessionStorage.clear();
+
+        window.location.href = "/login.html";
+    }
+
+
+    loadTournaments();
+
+</script>
+
+</body>
+</html>
